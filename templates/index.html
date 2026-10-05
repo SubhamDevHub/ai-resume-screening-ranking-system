@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Resume AI</title>
+    <meta name="description" content="AI-powered resume screening and ranking system. Upload resumes, match against job descriptions, and get intelligent suggestions." />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <!-- Header / Navbar -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="scan-search" class="logo-lucide"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-name">ResumeAI</span>
+                    <span class="logo-tag">Screening & Ranking</span>
+                </div>
+            </a>
+            <nav class="header-nav">
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#analyzer" class="nav-link">Analyzer</a>
+                <button class="btn btn-sm btn-outline" id="themeToggle">
+                    <i data-lucide="sun" class="icon-sm"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i data-lucide="sparkles" class="icon-xs"></i>
+                AI-Powered Resume Analysis
+            </div>
+            <h1 class="hero-title">
+                Screen & Rank Resumes
+                <span class="gradient-text">Intelligently</span>
+            </h1>
+            <p class="hero-subtitle">
+                Upload multiple resumes, paste your job description, and let our AI engine
+                rank candidates by relevance — with actionable improvement suggestions for each resume.
+            </p>
+            <div class="hero-actions">
+                <a href="#analyzer" class="btn btn-primary btn-lg">
+                    <i data-lucide="rocket" class="icon-sm"></i>
+                    Start Analyzing
+                </a>
+                <a href="#how-it-works" class="btn btn-ghost btn-lg">
+                    Learn More
+                    <i data-lucide="arrow-down" class="icon-sm"></i>
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-value">TF-IDF</span>
+                    <span class="stat-label">Similarity Engine</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-value">150+</span>
+                    <span class="stat-label">Skills Tracked</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-value">PDF/DOCX</span>
+                    <span class="stat-label">File Formats</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">Three simple steps to intelligent resume screening</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card" data-step="1">
+                    <div class="step-number">01</div>
+                    <div class="step-icon">
+                        <i data-lucide="file-text"></i>
+                    </div>
+                    <h3>Paste Job Description</h3>
+                    <p>Enter the full job description including required skills, experience, and qualifications.</p>
+                </div>
+                <div class="step-card" data-step="2">
+                    <div class="step-number">02</div>
+                    <div class="step-icon">
+                        <i data-lucide="upload-cloud"></i>
+                    </div>
+                    <h3>Upload Resumes</h3>
+                    <p>Upload multiple resumes in PDF, DOCX, or TXT format. Our parser handles diverse layouts.</p>
+                </div>
+                <div class="step-card" data-step="3">
+                    <div class="step-number">03</div>
+                    <div class="step-icon">
+                        <i data-lucide="bar-chart-3"></i>
+                    </div>
+                    <h3>Get AI Rankings</h3>
+                    <p>Receive ranked results with match scores, skill gaps, and tailored improvement suggestions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analyzer Section -->
+    <section class="section section-dark" id="analyzer">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Resume Analyzer</h2>
+                <p class="section-subtitle">Upload resumes and paste the job description to get started</p>
+            </div>
+
+            <form id="analyzerForm" class="analyzer-form">
+                <div class="form-grid">
+                    <!-- Job Description -->
+                    <div class="form-group form-group-jd">
+                        <label for="jobDescription" class="form-label">
+                            <i data-lucide="briefcase" class="icon-sm"></i>
+                            Job Description
+                        </label>
+                        <textarea
+                            id="jobDescription"
+                            name="job_description"
+                            class="form-textarea"
+                            placeholder="Paste the full job description here...&#10;&#10;Example:&#10;We are looking for a Senior Python Developer with 5+ years of experience in Django, REST APIs, PostgreSQL, Docker, and AWS. The ideal candidate should have experience with CI/CD pipelines and agile methodologies..."
+                            rows="12"
+                            required
+                        ></textarea>
+                        <span class="char-count" id="jdCharCount">0 characters</span>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="form-group form-group-upload">
+                        <label class="form-label">
+                            <i data-lucide="files" class="icon-sm"></i>
+                            Upload Resumes
+                        </label>
+                        <div class="upload-zone" id="uploadZone">
+                            <div class="upload-zone-content">
+                                <div class="upload-icon-wrap">
+                                    <i data-lucide="cloud-upload" class="upload-icon"></i>
+                                </div>
+                                <p class="upload-text">
+                                    <strong>Click to upload</strong> or drag and drop
+                                </p>
+                                <p class="upload-hint">PDF, DOCX, TXT — Max 16 MB each</p>
+                                <input
+                                    type="file"
+                                    id="resumeFiles"
+                                    name="resumes"
+                                    multiple
+                                    accept=".pdf,.docx,.doc,.txt"
+                                    class="upload-input"
+                                />
+                            </div>
+                        </div>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-lg btn-analyze" id="analyzeBtn">
+                        <i data-lucide="sparkles" class="icon-sm"></i>
+                        <span>Analyze & Rank Resumes</span>
+                    </button>
+                    <button type="button" class="btn btn-ghost btn-lg" id="clearBtn">
+                        <i data-lucide="trash-2" class="icon-sm"></i>
+                        Clear All
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-card">
+            <div class="loading-spinner"></div>
+            <h3>Analyzing Resumes</h3>
+            <p>Running NLP pipeline, extracting skills, and computing match scores...</p>
+            <div class="loading-bar">
+                <div class="loading-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <section class="section results-section" id="results" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i data-lucide="trophy" class="icon-md gradient-text"></i>
+                    Ranking Results
+                </h2>
+                <p class="section-subtitle" id="resultsSummary"></p>
+            </div>
+
+            <!-- JD Skills Tags -->
+            <div class="jd-skills-box" id="jdSkillsBox">
+                <h4>
+                    <i data-lucide="tag" class="icon-sm"></i>
+                    Skills Detected in Job Description
+                </h4>
+                <div class="skills-tags" id="jdSkillsTags"></div>
+            </div>
+
+            <!-- Results Cards -->
+            <div class="results-list" id="resultsList"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <i data-lucide="scan-search" class="logo-lucide"></i>
+                        </div>
+                        <span class="logo-name">ResumeAI</span>
+                    </div>
+                    <p>AI-powered resume screening for smarter hiring decisions.</p>
+                </div>
+                <div class="footer-copy">
+                    &copy; 2026 ResumeAI Screening System. Built with Python, Flask & NLP.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
