@@ -4,10 +4,12 @@ Main Flask Application
 """
 
 import os
+import tempfile
 import re
 import json
 import string
 from pathlib import Path
+
 
 from flask import Flask, render_template, request, jsonify, session
 from werkzeug.utils import secure_filename
@@ -15,9 +17,9 @@ from werkzeug.utils import secure_filename
 import PyPDF2
 import pdfplumber
 import docx
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize, sent_tokenize
+# import nltk
+# from nltk.corpus import stopwords
+# from nltk.tokenize import word_tokenize, sent_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -26,23 +28,27 @@ from sklearn.metrics.pairwise import cosine_similarity
 # ---------------------------------------------------------------------------
 # NLTK data (download once)
 # ---------------------------------------------------------------------------
-nltk.download("punkt", quiet=True)
-nltk.download("punkt_tab", quiet=True)
-nltk.download("stopwords", quiet=True)
-nltk.download("averaged_perceptron_tagger", quiet=True)
-nltk.download("averaged_perceptron_tagger_eng", quiet=True)
+# nltk.download("punkt", quiet=True)
+# nltk.download("punkt_tab", quiet=True)
+# nltk.download("stopwords", quiet=True)
+# nltk.download("averaged_perceptron_tagger", quiet=True)
+# nltk.download("averaged_perceptron_tagger_eng", quiet=True)
 
 # ---------------------------------------------------------------------------
 # Flask app configuration
 # ---------------------------------------------------------------------------
 app = Flask(__name__)
-app.secret_key = "ai_resume_screening_secret_key_2024"
-app.config["UPLOAD_FOLDER"] = os.path.join(os.path.dirname(__file__), "uploads")
+# app.secret_key = "ai_resume_screening_secret_key_2024"
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "dev-secret-key"
+)
+# app.config["UPLOAD_FOLDER"] = os.path.join(os.path.dirname(__file__), "uploads")
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16 MB max upload
 
 ALLOWED_EXTENSIONS = {"pdf", "docx", "doc", "txt"}
 
-os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+# os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 # ---------------------------------------------------------------------------
 # Skill keywords database (categorised)
@@ -440,17 +446,30 @@ def analyze():
         return jsonify({"error": "Please upload at least one resume."}), 400
 
     resumes = []
+
     for file in files:
-        if file and file.filename and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-            file.save(filepath)
+     if file and file.filename and allowed_file(file.filename):
+
+        filename = secure_filename(file.filename)
+
+        with tempfile.NamedTemporaryFile(
+            delete=False,
+            suffix=os.path.splitext(filename)[1]
+        ) as temp_file:
+            file.save(temp_file.name)
+            filepath = temp_file.name
+
+        try:
             text = extract_text(filepath)
-            resumes.append({"filename": filename, "text": text})
-            # Clean up uploaded file
-            try:
+
+            resumes.append({
+                "filename": filename,
+                "text": text
+            })
+
+        finally:
+            if os.path.exists(filepath):
                 os.remove(filepath)
-            except OSError:
                 pass
 
     if not resumes:
@@ -472,12 +491,18 @@ def analyze():
 # ---------------------------------------------------------------------------
 # if __name__ == "__main__":
 #     app.run(debug=True, port=5000)
+
 if __name__ == "__main__":
-    import webbrowser
-    from threading import Timer
+    app.run(debug=True)
 
-    url = "http://127.0.0.1:5000"
 
-    Timer(1, lambda: webbrowser.open(url)).start()
+    #For web browser
+# if __name__ == "__main__":
+#     import webbrowser
+#     from threading import Timer
 
-    app.run(debug=True, use_reloader=False)
+#     url = "http://127.0.0.1:5000"
+
+#     Timer(1, lambda: webbrowser.open(url)).start()
+
+#     app.run(debug=True, use_reloader=False)
