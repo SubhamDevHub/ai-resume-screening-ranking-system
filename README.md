@@ -99,7 +99,7 @@ python app.py
 
 #### 7. Open in Browser
 
-Visit: **ai-resume-screening-ranking-system.vercel.app**
+Visit: **[ai-resume-screening-ranking-system.vercel.app](https://ai-resume-screening-ranking-system.vercel.app/)**
 
 ---
 
